@@ -23,3 +23,6 @@ dist/
 
 # environment variables
 .env
+
+# deployment steps
+dfx_deployment

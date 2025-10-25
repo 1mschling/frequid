@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Request TLS Monitor and Recryptor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="icons/logo.png" alt="Web Request TLS Monitor and Recryptor Logo" class="logo">
+      <h1 class="title">Web Request TLS Monitor and Recryptor</h1>
+    </header>
+
+    <div class="status-card">
+      <div class="status-indicator">
+        <div id="statusDot" class="status-dot"></div>
+        <span id="statusText" class="status-text">Checking...</span>
+      </div>
+      <p id="statusDescription" class="status-description">Initializing proxy configuration...</p>
+    </div>
+
+    <div class="info-section">
+      <div class="info-row">
+        <span class="info-label">Proxy Address:</span>
+        <span id="proxyAddress" class="info-value">proxy.idx.network:8080</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Protocols:</span>
+        <span class="info-value">HTTP, HTTPS, HTTP/3</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="toggleButton" class="button button-primary">
+        <span id="buttonText">Enable Proxy</span>
+      </button>
+    </div>
+
+    <div class="features">
+      <h3 class="features-title">Features</h3>
+      <ul class="features-list">
+        <li class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <span>Real-time request monitoring</span>
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span>TLS termination detection</span>
+        </li>
+        <li class="feature-item">
+          <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          <span>HTTP/3 & QUIC support</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="dashboard-link">
+      <a href="https://idx-dashboard.ic0.app" target="_blank" class="link">
+        Open Dashboard
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+
+    <footer class="footer">
+      <p>© 2025. Built with <span class="heart">♥</span> using <a href="https://caffeine.ai" target="_blank" class="footer-link">caffeine.ai</a></p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+#### Here’s where each image asset should go in your project:
+
+
+frontend/public/
+
+idx-process-flow-diagram.dim_1200x800.png (process flow/architecture diagram)
+
+idx-popup-logo-transparent.dim_64x64.png (used in UI and extension docs)
+
+
+extension/icons/
+
+idx-extension-icon-transparent.dim_128x128.png → icon-128.png (main extension icon)
+
+idx-popup-logo-transparent.dim_64x64.png → logo.png (popup logo)
+
+proxy-active-icon.dim_24x24.png (active status icon)
+
+proxy-inactive-icon.dim_24x24.png (inactive status icon)
+
+
+extension/icons/ (for Firefox, if you add Firefox support)
+
+idx-firefox-extension-icon-transparent.dim_128x128.png (Firefox extension icon)
+
+idx-firefox-popup-logo-transparent.dim_64x64.png (Firefox popup logo)
+
+firefox-proxy-active-icon.dim_24x24.png (Firefox active icon)
+
+firefox-proxy-inactive-icon.dim_24x24.png (Firefox inactive icon)
