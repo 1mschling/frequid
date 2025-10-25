@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "frequid_backend": {
+      "main": "src/frequid_backend/main.mo",
+      "type": "motoko"
+    },
+    "frequid_frontend": {
+      "dependencies": [
+        "frequid_backend"
+      ],
+      "source": [
+        "src/frequid_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "frequid_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
