@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Chrome, Download, X } from 'lucide-react';
+import { Chrome, X } from 'lucide-react';
 import { detectBrowser, type BrowserInfo } from '@/lib/browserDetection';
+import { ExtensionInstallGuideDialog } from './ExtensionInstallGuideDialog';
 
 interface ExtensionBannerProps {
   variant?: 'default' | 'compact';
@@ -79,15 +80,10 @@ export function ExtensionBanner({ variant = 'default', onDismiss }: ExtensionBan
               {browserInfo.name} Extension Available
             </AlertTitle>
             <AlertDescription className="text-xs">
-              Install for automatic proxy configuration
+              Manual installation required - view instructions
             </AlertDescription>
           </div>
-          <Button size="sm" asChild>
-            <a href="/extension" target="_blank" rel="noopener noreferrer">
-              <Download className="mr-2 h-4 w-4" />
-              Install
-            </a>
-          </Button>
+          <ExtensionInstallGuideDialog />
         </div>
       </Alert>
     );
@@ -110,16 +106,11 @@ export function ExtensionBanner({ variant = 'default', onDismiss }: ExtensionBan
             {browserInfo.name} Extension Available
           </AlertTitle>
           <AlertDescription>
-            We've detected you're using {browserInfo.name}. Install our browser extension for automatic
-            proxy configuration and seamless request monitoring. No manual setup required!
+            We've detected you're using {browserInfo.name}. Our browser extension enables automatic
+            proxy configuration and seamless request monitoring. Manual installation is required - follow our step-by-step guide to load the unpacked extension.
           </AlertDescription>
           <div className="flex gap-2 pt-2">
-            <Button size="sm" asChild>
-              <a href="/extension" target="_blank" rel="noopener noreferrer">
-                <Download className="mr-2 h-4 w-4" />
-                Install Extension
-              </a>
-            </Button>
+            <ExtensionInstallGuideDialog />
             <Button variant="outline" size="sm" onClick={handleDismiss}>
               Maybe Later
             </Button>

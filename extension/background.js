@@ -4,6 +4,35 @@ const PROXY_CONFIG = {
   port: 8080
 };
 
+// Helper function to show notifications with error handling
+function showNotification(title, message) {
+  // Check if chrome.notifications API is available
+  if (typeof chrome !== 'undefined' && chrome.notifications && chrome.notifications.create) {
+    try {
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icons/icon-128.png',
+        title: title,
+        message: message
+      }, (notificationId) => {
+        // Check for errors
+        if (chrome.runtime.lastError) {
+          console.warn('Notification error:', chrome.runtime.lastError.message);
+          // Fallback: log to console
+          console.log(`Notification: ${title} - ${message}`);
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to create notification:', error);
+      // Fallback: log to console
+      console.log(`Notification: ${title} - ${message}`);
+    }
+  } else {
+    // API not available, fallback to console logging
+    console.log(`Notification: ${title} - ${message}`);
+  }
+}
+
 // Initialize extension
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('IDX Proxy extension installed');
@@ -12,12 +41,10 @@ chrome.runtime.onInstalled.addListener(async () => {
   await chrome.storage.local.set({ proxyEnabled: false });
   
   // Show welcome notification
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'icons/icon-128.png',
-    title: 'IDX Proxy Installed',
-    message: 'Click the extension icon to configure your proxy settings.'
-  });
+  showNotification(
+    'IDX Proxy Installed',
+    'Click the extension icon to configure your proxy settings.'
+  );
 });
 
 // Listen for messages from popup
@@ -66,12 +93,10 @@ async function toggleProxy(enabled) {
 chrome.proxy.onProxyError.addListener((details) => {
   console.error('Proxy error:', details);
   
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'icons/icon-128.png',
-    title: 'Proxy Connection Error',
-    message: 'Unable to connect to IDX proxy. Please check your connection.'
-  });
+  showNotification(
+    'Proxy Connection Error',
+    'Unable to connect to IDX proxy. Please check your connection.'
+  );
 });
 
 // Listen for storage changes to sync proxy state

@@ -1,7 +1,8 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Activity, AlertTriangle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Shield, Activity, AlertTriangle, Server } from 'lucide-react';
 import { ExtensionBanner } from '@/components/ExtensionBanner';
 import { ProcessFlowDialog } from '@/components/ProcessFlowDialog';
 
@@ -18,7 +19,13 @@ export function LoginPage() {
             </div>
             <span className="text-lg font-semibold">Web Request TLS Monitor and Recryptor</span>
           </div>
-          <ProcessFlowDialog />
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
+              <Server className="mr-1 h-3 w-3" />
+              ICP Proxy Live
+            </Badge>
+            <ProcessFlowDialog />
+          </div>
         </div>
       </header>
 
@@ -66,19 +73,27 @@ export function LoginPage() {
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-primary">•</span>
-                    <span>Real-time request monitoring</span>
+                    <span>Real-time request monitoring via ICP canister proxy</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-primary">•</span>
-                    <span>TLS termination detection</span>
+                    <span>TLS termination detection across all protocols</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-primary">•</span>
-                    <span>Session-based data storage</span>
+                    <span>Automatic ChaCha20-256 re-encryption</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-primary">•</span>
+                    <span>Session-based data storage with user control</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-0.5 text-primary">•</span>
                     <span>Chrome & Firefox extension support</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="mt-0.5 text-primary">•</span>
+                    <span>Decentralized proxy on Internet Computer</span>
                   </li>
                 </ul>
               </div>

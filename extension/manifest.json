@@ -5,7 +5,8 @@
   "description": "Automatically configure your browser to use the IDX proxy for HTTP, HTTPS, and HTTP/3/QUIC traffic monitoring",
   "permissions": [
     "proxy",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "host_permissions": [
     "<all_urls>"

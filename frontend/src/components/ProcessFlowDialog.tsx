@@ -56,7 +56,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                   <div>
                     <h3 className="text-lg font-semibold mb-2">Process Overview</h3>
                     <p className="text-sm text-muted-foreground">
-                      The Web Request TLS Monitor and Recryptor provides comprehensive monitoring of web traffic through a secure proxy system.
+                      The Web Request TLS Monitor and Recryptor provides comprehensive monitoring of web traffic through a secure ICP canister-based proxy system.
                       This diagram illustrates the complete workflow from initial setup to data export and decryption approval.
                     </p>
                   </div>
@@ -66,14 +66,15 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                       <h4 className="font-semibold text-sm mb-2">1. Browser Detection & Extension Setup</h4>
                       <p className="text-sm text-muted-foreground">
                         The application automatically detects your browser (Chrome or Firefox) and prompts you to install
-                        the appropriate extension. The extension configures your browser to route traffic through the Web Request TLS Monitor and Recryptor proxy.
+                        the appropriate extension. The extension configures your browser to route traffic through the ICP canister proxy.
                       </p>
                     </div>
 
                     <div className="rounded-lg border border-border/50 bg-card p-4">
-                      <h4 className="font-semibold text-sm mb-2">2. Extension Activation</h4>
+                      <h4 className="font-semibold text-sm mb-2">2. Extension Activation & ICP Canister Configuration</h4>
                       <p className="text-sm text-muted-foreground">
-                        Once installed, the extension automatically configures proxy settings for HTTP, HTTPS, and HTTP/3/QUIC traffic.
+                        Once installed, configure the extension with your deployed ICP canister's HTTP gateway URL. The extension
+                        automatically configures proxy settings for HTTP, HTTPS, and HTTP/3/QUIC traffic to route through the canister.
                         You can enable/disable the proxy through the extension's simple interface.
                       </p>
                     </div>
@@ -87,10 +88,10 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                     </div>
 
                     <div className="rounded-lg border border-border/50 bg-card p-4">
-                      <h4 className="font-semibold text-sm mb-2">4. Request Proxying & Monitoring</h4>
+                      <h4 className="font-semibold text-sm mb-2">4. Request Proxying Through ICP Canister & Monitoring</h4>
                       <p className="text-sm text-muted-foreground">
-                        All web requests from your browser pass through the Web Request TLS Monitor and Recryptor proxy, which captures metadata including URLs,
-                        methods, protocols, headers, and response status codes. This data is sent to the backend for analysis.
+                        All web requests from your browser pass through the ICP canister proxy, which captures metadata including URLs,
+                        methods, protocols, headers, and response status codes. The proxy canister forwards this data to the backend canister for analysis.
                       </p>
                     </div>
 
@@ -105,7 +106,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                     <div className="rounded-lg border border-border/50 bg-card p-4">
                       <h4 className="font-semibold text-sm mb-2">6. Automatic Re-encryption</h4>
                       <p className="text-sm text-muted-foreground">
-                        When external TLS termination is detected, the system automatically re-encrypts request bodies using
+                        When external TLS termination is detected, the ICP canister proxy automatically re-encrypts request bodies using
                         ChaCha20-256 encryption with session-specific keys and unique nonces. This protects your data even if intercepted by external proxies.
                       </p>
                     </div>
@@ -159,6 +160,10 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li className="flex items-start gap-2">
                         <span className="mt-0.5 text-primary">•</span>
+                        <span>ICP canister-based proxy for enhanced security and decentralization</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="mt-0.5 text-primary">•</span>
                         <span>Session-based data storage with automatic cleanup</span>
                       </li>
                       <li className="flex items-start gap-2">
@@ -201,20 +206,21 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                       <RefreshCw className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold mb-1">Idempotent Proxy Operation</h3>
+                      <h3 className="text-lg font-semibold mb-1">ICP Canister-Based Idempotent Proxy</h3>
                       <p className="text-sm text-muted-foreground">
-                        Understanding how the proxy preserves request integrity
+                        Understanding how the ICP canister proxy preserves request integrity
                       </p>
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-sm mb-2">What is Idempotency?</h4>
+                      <h4 className="font-semibold text-sm mb-2">What is the ICP Canister Proxy?</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        The Web Request TLS Monitor and Recryptor proxy is designed to be <strong>idempotent</strong>, meaning it operates purely for monitoring 
-                        and logging purposes without altering the semantics of HTTP methods or session state. The proxy acts as 
-                        a transparent observer that does not interfere with the normal operation of web requests.
+                        The proxy is implemented as an <strong>Internet Computer canister</strong>, providing a decentralized and secure
+                        Layer 7 proxy that operates idempotently for monitoring and logging purposes. The canister exposes HTTP endpoints
+                        through the ICP HTTP gateway, allowing browser extensions to route traffic through it while maintaining the original
+                        semantics of HTTP methods and session state.
                       </p>
                     </div>
 
@@ -224,6 +230,13 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         Key Principles
                       </h4>
                       <ul className="space-y-2 text-sm text-muted-foreground">
+                        <li className="flex items-start gap-2">
+                          <span className="mt-0.5 text-primary">•</span>
+                          <span>
+                            <strong>ICP Canister Architecture:</strong> Runs as a dedicated canister on the Internet Computer
+                            with HTTP gateway access for browser extension connectivity
+                          </span>
+                        </li>
                         <li className="flex items-start gap-2">
                           <span className="mt-0.5 text-primary">•</span>
                           <span>
@@ -252,11 +265,18 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                             preserving the original communication between client and server
                           </span>
                         </li>
+                        <li className="flex items-start gap-2">
+                          <span className="mt-0.5 text-primary">•</span>
+                          <span>
+                            <strong>Decentralized Security:</strong> Leverages the Internet Computer's security model
+                            for enhanced protection and transparency
+                          </span>
+                        </li>
                       </ul>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-sm mb-2">What the Proxy Does</h4>
+                      <h4 className="font-semibold text-sm mb-2">What the ICP Canister Proxy Does</h4>
                       <div className="space-y-2">
                         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
                           <p className="text-sm text-muted-foreground">
@@ -267,7 +287,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
                           <p className="text-sm text-muted-foreground">
                             <strong className="text-emerald-600 dark:text-emerald-400">✓ Logs:</strong> Records request 
-                            details for real-time dashboard display and session export
+                            details and forwards them to the backend canister for real-time dashboard display
                           </p>
                         </div>
                         <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
@@ -282,11 +302,17 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                             compromised data using ChaCha20-256 when external TLS termination is detected (see Re-Encryption tab)
                           </p>
                         </div>
+                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                          <p className="text-sm text-muted-foreground">
+                            <strong className="text-emerald-600 dark:text-emerald-400">✓ Coordinates:</strong> Communicates
+                            with the backend canister for session management and TLS event notifications
+                          </p>
+                        </div>
                       </div>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-sm mb-2">What the Proxy Does NOT Do</h4>
+                      <h4 className="font-semibold text-sm mb-2">What the ICP Canister Proxy Does NOT Do</h4>
                       <div className="space-y-2">
                         <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3">
                           <p className="text-sm text-muted-foreground">
@@ -334,13 +360,17 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                   <h3 className="text-lg font-semibold mb-3">Technical Implementation</h3>
                   <div className="space-y-3 text-sm text-muted-foreground">
                     <p>
-                      The proxy is implemented in Motoko on the Internet Computer, ensuring transparent operation 
-                      while providing comprehensive monitoring capabilities. All monitoring operations are performed 
-                      asynchronously without blocking or delaying the original request-response cycle.
+                      The proxy is implemented in Motoko as a dedicated Internet Computer canister, ensuring transparent operation 
+                      while providing comprehensive monitoring capabilities. The canister exposes HTTP endpoints through the ICP
+                      HTTP gateway, allowing browser extensions to route traffic through it.
                     </p>
                     <p>
-                      Request metadata is captured and stored temporarily in session-based storage, allowing real-time 
-                      dashboard updates without impacting the performance or behavior of proxied applications.
+                      Request metadata is captured and forwarded to the backend canister for storage and analysis. All monitoring 
+                      operations are performed asynchronously without blocking or delaying the original request-response cycle.
+                    </p>
+                    <p>
+                      The canister-to-canister communication ensures secure data transfer between the proxy and backend, leveraging
+                      the Internet Computer's built-in security features for enhanced protection.
                     </p>
                   </div>
                 </div>
@@ -368,8 +398,8 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                     <div>
                       <h4 className="font-semibold text-sm mb-2">What is the Re-Encryptor?</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        The Re-Encryptor is a security feature that automatically protects sensitive data when the proxy 
-                        detects that a request has experienced <strong>TLS termination outside the ICP network</strong>. 
+                        The Re-Encryptor is a security feature implemented in the ICP canister proxy that automatically protects sensitive data when 
+                        it detects that a request has experienced <strong>TLS termination outside the ICP network</strong>. 
                         When this occurs, the proxy re-encrypts the request body using <strong>ChaCha20-256 encryption</strong> with 
                         a session-specific symmetric key and a unique nonce/IV before forwarding it to the external server.
                       </p>
@@ -384,7 +414,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">1.</span>
                           <span>
-                            <strong>Detection:</strong> The proxy analyzes each request for signs of external TLS 
+                            <strong>Detection:</strong> The ICP canister proxy analyzes each request for signs of external TLS 
                             termination (suspicious headers, injected content, QUIC manipulation, etc.)
                           </span>
                         </li>
@@ -412,7 +442,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">5.</span>
                           <span>
-                            <strong>Storage:</strong> The encrypted data and nonce are stored together in the smart contract 
+                            <strong>Storage:</strong> The encrypted data and nonce are stored together in the backend canister 
                             for potential decryption upon user approval
                           </span>
                         </li>
@@ -427,7 +457,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                           <span className="font-semibold text-primary">7.</span>
                           <span>
                             <strong>Decryption Request:</strong> The external server can submit a decryption request 
-                            to the smart contract if it needs access to the original plaintext data
+                            to the backend canister if it needs access to the original plaintext data
                           </span>
                         </li>
                       </ol>
@@ -470,6 +500,12 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                           <p className="text-sm text-muted-foreground">
                             <strong className="text-emerald-600 dark:text-emerald-400">✓ Session-Specific Keys:</strong> 
                             Each user session has unique encryption keys, preventing cross-session attacks
+                          </p>
+                        </div>
+                        <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                          <p className="text-sm text-muted-foreground">
+                            <strong className="text-emerald-600 dark:text-emerald-400">✓ ICP Security:</strong> 
+                            Leverages the Internet Computer's security model for enhanced protection
                           </p>
                         </div>
                       </div>
@@ -635,7 +671,7 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                       <h4 className="font-semibold text-sm mb-2">What is the Decryption Approval System?</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         When a request is re-encrypted due to external TLS termination, the plaintext data is stored 
-                        securely in the smart contract but is <strong>not automatically accessible</strong> to external 
+                        securely in the backend canister but is <strong>not automatically accessible</strong> to external 
                         servers. External endpoint servers must submit a decryption request to access the original data, 
                         and you have full control over whether to approve or deny these requests.
                       </p>
@@ -650,16 +686,16 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">1.</span>
                           <span>
-                            <strong>Re-encryption:</strong> When external TLS termination is detected, the request 
-                            body is re-encrypted using ChaCha20-256 with a unique nonce, and both the encrypted data 
-                            and nonce are stored securely in the smart contract
+                            <strong>Re-encryption:</strong> When external TLS termination is detected, the ICP canister proxy
+                            re-encrypts the request body using ChaCha20-256 with a unique nonce, and both the encrypted data 
+                            and nonce are stored securely in the backend canister
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">2.</span>
                           <span>
                             <strong>Server Request:</strong> The external endpoint server receives the encrypted data 
-                            and can submit a decryption request to the smart contract if it needs the plaintext
+                            and can submit a decryption request to the backend canister if it needs the plaintext
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
@@ -679,14 +715,14 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">5.</span>
                           <span>
-                            <strong>Data Release:</strong> If approved, the plaintext data is released to the smart 
-                            contract and marked as available for the endpoint server to retrieve
+                            <strong>Data Release:</strong> If approved, the plaintext data is released to the backend canister 
+                            and marked as available for the endpoint server to retrieve
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span className="font-semibold text-primary">6.</span>
                           <span>
-                            <strong>Server Retrieval:</strong> The endpoint server polls the smart contract and 
+                            <strong>Server Retrieval:</strong> The endpoint server polls the backend canister and 
                             retrieves the approved plaintext data using the stored nonce for decryption
                           </span>
                         </li>
@@ -867,4 +903,3 @@ export function ProcessFlowDialog({ trigger }: ProcessFlowDialogProps) {
     </Dialog>
   );
 }
-

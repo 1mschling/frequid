@@ -5,48 +5,98 @@ A web application that provides users with a real-time dashboard to monitor prox
 
 Real-time dashboard for monitoring proxied web requests, and enabling data encryption for important data.
 
+## Project Configuration
+- The project uses dfx.json configuration for Internet Computer deployment
+- Backend canister: Motoko-based backend located in `backend/main.mo`
+- Backend dependencies: `backend/authorization/access-control.mo` and `backend/http-outcalls/outcall.mo`
+- Frontend canister: React frontend built with Vite, located in `frontend/`
+- Frontend serves static assets from `frontend/dist/`
+- Proxy canister: Motoko-based proxy server located in `proxy/main.mo`
+- Configuration supports both local development and Internet Computer deployment
+- Appropriate build and deploy steps configured for all canisters
+
+## ICP Proxy Canister Component
+- Internet Computer canister-based Layer 7 proxy server that operates as part of the ICP ecosystem
+- Deployed as a dedicated canister with HTTP gateway access for browser extension configuration
+- Supports HTTP, HTTPS, and HTTP/3/QUIC protocol proxying through ICP HTTP outcalls
+- Intercepts and monitors all browser web requests routed through the proxy canister
+- Integrates with the existing backend canister for session-based request logging and monitoring
+- Implements TLS termination detection across all supported protocols
+- Applies ChaCha20-256 re-encryption with nonce/IV generation for flagged requests when TLS termination is detected outside the ICP network
+- Forwards request metadata and monitoring data to the backend canister for dashboard display
+- Handles decryption approval workflows by coordinating with the backend canister
+- Maintains session-based request tracking and forwards data to appropriate user sessions
+- Implements idempotent operation for monitoring and logging purposes without altering request semantics
+- Provides deployment instructions and configuration for running as an ICP canister
+- Includes comprehensive logging and error handling for proxy operations
+- Supports real-time communication with the backend canister for TLS event notifications and re-encryption status updates
+- Exposes HTTP endpoints through ICP HTTP gateway for browser extension connectivity
+- Handles CORS configuration for cross-origin requests from browser extensions
+- Implements rate limiting and security measures appropriate for ICP canister deployment
+- Deployed to Internet Computer mainnet with live proxy address for production use
+- Provides stable canister ID and HTTP gateway URL for browser extension configuration
+
 ## Process Flow Documentation
 - Display a comprehensive process flow diagram within the application documentation or help section
 - Visual diagram illustrating the complete application workflow from browser setup to session export
 - Flow diagram should show:
   - Browser detection and extension installation process
-  - Extension activation and proxy configuration
+  - Extension activation and proxy configuration with ICP canister
   - Internet Identity authentication flow
-  - Request proxying and monitoring pipeline
+  - Request proxying through ICP canister and monitoring pipeline
   - TLS termination detection and re-encryption process
   - Real-time dashboard updates
   - Filtering and export functionality
   - External server decryption request workflow
   - User approval process for plaintext data release
 - Interactive or static diagram accessible from the main dashboard
-- Clear visual representation of data flow between browser, extension, proxy, and dashboard
+- Clear visual representation of data flow between browser, extension, ICP proxy canister, and dashboard
+- The process flow diagram image (`idx-process-flow-diagram.dim_1200x800.png`) must be included in the `frontend/public/` folder and displayed in the Process Flow Dialog and help sections
+- Ensure the diagram is viewable from the UI through help or info sections with clear links or embedded images for user access
 
 ## Browser Detection and Extension Promotion
 - Automatically detect the user's browser (Chrome or Firefox)
 - Display a prominent confirmation prompt or banner suggesting the appropriate browser extension for installation
-- Provide direct install links for Chrome Web Store or Firefox Add-ons as applicable
+- For Chrome extension installation:
+  - Display clear manual installation instructions through a reliable modal or dedicated page
+  - Provide step-by-step guidance for downloading and loading the unpacked extension via `chrome://extensions/` with Developer Mode enabled
+  - Include instructions for updating the proxy address to point to the deployed ICP canister URL
+  - Ensure the installation guide is accessible from both the login page banner and the dedicated extension page
+  - The guide must not trigger any fetch requests or automatic install attempts
+  - Instructions should be purely informational and manual
+- For Firefox, provide direct install links for Firefox Add-ons as applicable with ICP canister configuration
 - For unsupported browsers, display a message indicating that only Chrome and Firefox are supported for automatic proxy configuration
 - Banner should be visually prominent and easily dismissible after user interaction
 
 ## Chrome Extension
-- Automatically configures Chrome browser to use the Web Request TLS Monitor and Recryptor proxy for HTTP, HTTPS, and HTTP/3/QUIC traffic
-- Preconfigured with the Web Request TLS Monitor and Recryptor proxy address - no manual setup required
+- Automatically configures Chrome browser to use the Web Request TLS Monitor and Recryptor ICP proxy canister for HTTP, HTTPS, and HTTP/3/QUIC traffic
+- Configurable proxy address that can be updated to point to the deployed ICP canister URL
 - Simple onboarding UI within the extension to:
+  - Configure the ICP canister proxy address
   - Confirm proxy activation
   - Display current proxy status (active/inactive)
-  - Show connection status to Web Request TLS Monitor and Recryptor proxy
-- Extension activates proxy configuration upon installation
+  - Show connection status to Web Request TLS Monitor and Recryptor ICP proxy
+- Extension activates proxy configuration upon installation with default ICP canister address
 - Users can enable/disable proxy through the extension interface
+- Users can update proxy address to point to their preferred ICP canister deployment
+- Chrome extension manifest includes "notifications" permission to enable reliable notification functionality
+- Extension popup and background scripts include proper error handling for notification API calls
+- Notification calls are only made when chrome.notifications API is available
+- Graceful degradation when notification API is unavailable
+- Pre-configured with live ICP proxy canister address for immediate use
 
 ## Firefox Extension
-- Automatically configures Firefox browser to use the Web Request TLS Monitor and Recryptor proxy for HTTP, HTTPS, and HTTP/3/QUIC traffic
-- Preconfigured with the Web Request TLS Monitor and Recryptor proxy address - no manual setup required
+- Automatically configures Firefox browser to use the Web Request TLS Monitor and Recryptor ICP proxy canister for HTTP, HTTPS, and HTTP/3/QUIC traffic
+- Configurable proxy address that can be updated to point to the deployed ICP canister URL
 - Simple onboarding UI within the extension to:
+  - Configure the ICP canister proxy address
   - Confirm proxy activation
   - Display current proxy status (active/inactive)
-  - Show connection status to Web Request TLS Monitor and Recryptor proxy
-- Extension activates proxy configuration upon installation
+  - Show connection status to Web Request TLS Monitor and Recryptor ICP proxy
+- Extension activates proxy configuration upon installation with default ICP canister address
 - Users can enable/disable proxy through the extension interface
+- Users can update proxy address to point to their preferred ICP canister deployment
+- Pre-configured with live ICP proxy canister address for immediate use
 
 ## Authentication
 - Users log in using Internet Identity
@@ -220,6 +270,9 @@ Real-time dashboard for monitoring proxied web requests, and enabling data encry
 - Release approved plaintext data to smart contract storage for endpoint server retrieval
 - Provide polling mechanism for external servers to retrieve approved plaintext data
 - Maintain audit log of all decryption requests and user approval decisions
+- Receive and process request data from the ICP proxy canister component
+- Provide API endpoints for the proxy canister to forward request metadata and monitoring data
+- Handle real-time communication with the proxy canister for TLS event notifications and re-encryption coordination
 - Collect and store comprehensive metadata fields using best-effort detection:
   - Authentication status (authenticated/unauthenticated)
   - Key agreement protocol identification
@@ -244,6 +297,33 @@ Real-time dashboard for monitoring proxied web requests, and enabling data encry
 - Document encryption algorithm implementation and nonce/IV generation process in backend code
 - Provide metadata detection status and confidence levels for each attribute
 - Support filter preset configurations for common security analysis scenarios
+- Backend canister implemented in Motoko with main logic in `backend/main.mo`
+- Include authorization and access control functionality in `backend/authorization/access-control.mo`
+- Include HTTP outcall functionality in `backend/http-outcalls/outcall.mo`
+- Integrate with deployed ICP proxy canister for live request processing
+
+## Proxy Canister Requirements
+- Implement Layer 7 proxy functionality as an Internet Computer canister
+- Handle HTTP, HTTPS, and HTTP/3/QUIC traffic through ICP HTTP outcalls and inter-canister calls
+- Expose HTTP endpoints through ICP HTTP gateway for browser extension connectivity
+- Implement CORS configuration for cross-origin requests from browser extensions
+- Process incoming requests from browser extensions and forward to appropriate destinations
+- Monitor and analyze requests for TLS termination indicators
+- Apply ChaCha20-256 re-encryption when external TLS termination is detected
+- Forward request metadata and monitoring data to the backend canister
+- Coordinate with backend canister for session management and user authentication
+- Implement rate limiting and security measures appropriate for ICP canister deployment
+- Handle idempotent operation for monitoring and logging without altering request semantics
+- Support real-time communication with backend canister for TLS events and re-encryption status
+- Provide comprehensive logging and error handling for proxy operations
+- Implement secure key management for session-specific encryption keys
+- Handle nonce/IV generation and storage for encryption operations
+- Proxy canister implemented in Motoko with main logic in `proxy/main.mo`
+- Include HTTP outcall functionality for forwarding requests to external destinations
+- Support canister-to-canister communication with the backend canister
+- Deploy to Internet Computer mainnet with stable canister ID
+- Provide live HTTP gateway URL for browser extension configuration
+- Ensure production-ready deployment with proper error handling and monitoring
 
 ## Encryption Implementation Notes
 - Uses ChaCha20-256 encryption algorithm for strong symmetric encryption
@@ -283,19 +363,35 @@ Real-time dashboard for monitoring proxied web requests, and enabling data encry
 - Audit log view for decryption request history
 - Enhanced request detail view for examining individual requests including all metadata fields with proper labeling
 - Session status indicator
-- Browser detection banner with extension installation prompts
-- Chrome extension with simple onboarding interface
-- Firefox extension with simple onboarding interface
-- Extension popup showing proxy status and controls
+- Browser detection banner with extension installation prompts including ICP canister configuration instructions
+- Chrome extension with simple onboarding interface and proxy address configuration
+- Firefox extension with simple onboarding interface and proxy address configuration
+- Extension popup showing proxy status and controls with ICP canister connectivity
 - Background user activity monitoring with invisible event listeners
 - Inactivity warning notifications and re-authentication prompts
 - User liveliness status indicators
-- Process flow diagram accessible from dashboard or help section
+- Process flow diagram accessible from dashboard or help section, displaying the `idx-process-flow-diagram.dim_1200x800.png` image from the `frontend/public/` folder with clear links or embedded images for user access
 - Comprehensive help dialogs and documentation explaining each filter and metadata field
 - Filter preset buttons for common security analysis scenarios
+- Extension installation guide modal or page with step-by-step Chrome extension installation instructions accessible from both login page banner and dedicated extension page, including ICP canister proxy configuration
+- Display live ICP proxy canister address and connection status
+- Configuration interface for updating proxy address to deployed canister
 - Application content in English
 
 ## Documentation Requirements
+- Create a comprehensive top-level `README.md` for the entire project that provides:
+  - Project overview and purpose
+  - Main features summary including real-time dashboard, TLS/decryption alerts, session export, advanced filtering, re-encryption workflow, decryption approval system, and user liveliness detection
+  - Architecture and process flow diagram reference (`idx-process-flow-diagram.dim_1200x800.png`)
+  - Asset organization and locations
+  - Installation and setup instructions for both the web app and browser extensions
+  - ICP proxy canister deployment and configuration instructions
+  - Clear distinction between the main project, Chrome extension, Firefox extension, ICP proxy canister, and specification documents
+  - Links to further documentation including `spec.md`
+  - Up-to-date instructions and references for all recent features and asset locations
+  - dfx.json configuration details and deployment instructions for all canisters
+  - Live ICP proxy canister address and HTTP gateway URL
+  - Instructions for configuring browser extensions with deployed proxy address
 - Include detailed project README explaining proxy idempotency and re-encryption features
 - Document ChaCha20-256 encryption implementation using Web Crypto API
 - Explain nonce/IV generation process including entropy from user liveliness detection
@@ -306,6 +402,19 @@ Real-time dashboard for monitoring proxied web requests, and enabling data encry
 - Document security considerations and production deployment recommendations
 - Provide examples of external server integration for decryption requests
 - Document nonce/IV storage and transmission mechanisms
+- Provide comprehensive ICP proxy canister documentation including:
+  - Deployment instructions as an Internet Computer canister
+  - Configuration requirements and environment setup
+  - Integration with backend canister API endpoints
+  - Protocol support details (HTTP, HTTPS, HTTP/3/QUIC)
+  - TLS termination detection implementation
+  - Re-encryption coordination with backend
+  - HTTP gateway configuration for browser extension connectivity
+  - CORS setup and security measures
+  - Logging and monitoring capabilities
+  - Error handling and troubleshooting guide
+  - Live deployment details and canister ID
+  - Production monitoring and maintenance procedures
 - Comprehensive documentation for all metadata fields including:
   - Detection methods and algorithms used
   - Accuracy limitations and confidence levels
@@ -318,4 +427,31 @@ Real-time dashboard for monitoring proxied web requests, and enabling data encry
 - Include examples of common security analysis workflows using the filtering system
 - Document labeling consistency standards and visual indicator meanings
 - Provide troubleshooting guide for metadata detection issues
+- Reference the process flow diagram (`idx-process-flow-diagram.dim_1200x800.png`) in the README and ensure it is accessible from the UI with clear links or embedded images
+- Update the `extension/README.md` file to ensure it fully reflects the latest features, including:
+  - The new application name "Web Request TLS Monitor and Recryptor" and updated description
+  - The process flow and architecture diagram, with instructions on where to find and view it in the `frontend/public/` folder
+  - The advanced filtering, session export, re-encryption, decryption approval workflow, and ChaCha20-256 encryption with nonce/IV generation
+  - Clear references to all required image assets and their correct folder locations
+  - Any new UI/UX features, browser extension details, and security considerations
+  - Chrome extension manifest notifications permission and error handling requirements
+  - ICP canister proxy configuration and address update instructions
+  - Live ICP proxy canister address and configuration details
+- Document dfx.json configuration structure and canister setup for all three canisters (backend, frontend, proxy)
+- Provide deployment instructions for both local development and Internet Computer mainnet
+- Include instructions for updating browser extension proxy addresses to point to deployed ICP canister
+- Document live deployment procedures and canister management
+- Provide production deployment checklist and monitoring guidelines
 - Application content and documentation in English
+
+## Deployment Requirements
+- Deploy proxy canister to Internet Computer mainnet
+- Obtain stable canister ID for proxy canister
+- Configure HTTP gateway access for browser extension connectivity
+- Update browser extensions with live proxy canister address
+- Provide deployment scripts and automation for canister updates
+- Implement canister monitoring and health checks
+- Document production deployment procedures and rollback strategies
+- Ensure proper CORS configuration for cross-origin requests
+- Configure rate limiting and security measures for production use
+- Provide canister upgrade procedures and version management

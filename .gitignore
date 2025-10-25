@@ -24,5 +24,18 @@ dist/
 # environment variables
 .env
 
-# deployment steps
+
 dfx_deployment
+
+build
+
+spec.md
+
+package.json
+
+package-lock.json
+
+tsconfig.json
+
+image_notes
+
